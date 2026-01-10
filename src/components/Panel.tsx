@@ -6,6 +6,7 @@ import { SkillDetail } from './SkillDetail';
 import { InstalledList } from './InstalledList';
 import { SearchBar } from './SearchBar';
 import { FilterDropdown } from './FilterDropdown';
+import { SortDropdown } from './SortDropdown';
 import { usePlugins } from '../hooks/usePlugins';
 import { useSkills } from '../hooks/useSkills';
 import { useInstalled } from '../hooks/useInstalled';
@@ -48,6 +49,8 @@ export function Panel({ onOpenSettings }: PanelProps) {
     tagFilter,
     setTagFilter,
     allTags,
+    sortBy,
+    setSortBy,
     refresh: refreshSkills,
     loadMore: loadMoreSkills,
   } = useSkills();
@@ -136,6 +139,12 @@ export function Panel({ onOpenSettings }: PanelProps) {
               options={allTags.map(t => ({ value: t, label: t }))}
               value={tagFilter}
               onChange={setTagFilter}
+            />
+          )}
+          {activeTab === 'skills' && (
+            <SortDropdown
+              value={sortBy}
+              onChange={setSortBy}
             />
           )}
         </div>

@@ -451,6 +451,12 @@ body {
   border-width: 2px;
 }
 
+.spinner-xs {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+
 /* End of list indicator */
 .end-of-list {
   padding: 16px;

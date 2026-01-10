@@ -26,9 +26,19 @@
   gap: 12px;
   padding: 12px;
   background: hsl(var(--sidebar-accent));
-  border: 1px solid hsl(var(--sidebar-border));
+  border: 0.5px solid hsl(var(--sidebar-border));
   border-radius: var(--radius);
   transition: all 0.15s ease;
+}
+
+:root .installed-card {
+  background: #fff;
+  box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 1px 0 rgba(0, 0, 0, 0.09), 0 0 1px 0 rgba(0, 0, 0, 0.10);
+}
+
+.dark .installed-card {
+  background: hsl(var(--sidebar-accent));
+  box-shadow: none;
 }
 
 .installed-card:hover {

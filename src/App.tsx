@@ -1,12 +1,39 @@
 import { useState, useEffect } from "react";
 import { Panel } from "./components/Panel";
 import { Settings } from "./components/Settings";
+import { Toast } from "./components/Toast";
+import { ToastProvider, useToast } from "./contexts/ToastContext";
 import { useSettings } from "./hooks/useSettings";
 import { Theme } from "./types";
 
-function App() {
+function AppContent() {
   const [showSettings, setShowSettings] = useState(false);
   const { settings, updateSettings, loading: settingsLoading } = useSettings();
+  const { toast, hideToast } = useToast();
+
+  const handleRevealInFinder = async (filePath: string) => {
+    try {
+      if (window.__TAURI__) {
+        const { invoke } = await import('@tauri-apps/api/core');
+        // Get the directory containing the file
+        const dirPath = filePath.substring(0, filePath.lastIndexOf('/'));
+        await invoke('open_in_explorer', { path: dirPath });
+      }
+    } catch (error) {
+      console.error('Failed to reveal in finder:', error);
+    }
+  };
+
+  const handleOpenFile = async (filePath: string) => {
+    try {
+      if (window.__TAURI__) {
+        const { invoke } = await import('@tauri-apps/api/core');
+        await invoke('open_in_explorer', { path: filePath });
+      }
+    } catch (error) {
+      console.error('Failed to open file:', error);
+    }
+  };
 
   useEffect(() => {
     const applyTheme = (theme: Theme, animate = true) => {
@@ -65,7 +92,21 @@ function App() {
       ) : (
         <Panel onOpenSettings={() => setShowSettings(true)} />
       )}
+      <Toast 
+        data={toast} 
+        onClose={hideToast} 
+        onReveal={handleRevealInFinder}
+        onOpenFile={handleOpenFile}
+      />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ToastProvider>
+      <AppContent />
+    </ToastProvider>
   );
 }
 

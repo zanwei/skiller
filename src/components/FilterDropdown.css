@@ -1,5 +1,6 @@
 .filter-dropdown {
   position: relative;
+  flex-shrink: 0;
 }
 
 .filter-trigger {
@@ -92,4 +93,10 @@
 
 .filter-option:last-child {
   border-radius: 0 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px);
+}
+
+/* Sort dropdown menu - align to the right */
+.sort-menu {
+  left: auto;
+  right: 0;
 }

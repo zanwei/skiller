@@ -422,3 +422,19 @@ export async function fetchSkillContent(rawFileUrl: string): Promise<string> {
     }
   });
 }
+
+export function getSkillDownloadInfo(skill: Skill): { url: string; filename: string } | null {
+  // Use rawFileUrl to get the SKILL.md download URL
+  if (!skill.rawFileUrl) {
+    return null;
+  }
+  
+  // rawFileUrl format: https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}/SKILL.md
+  // We can directly use this URL to download the SKILL.md file
+  const filename = `${skill.name}.md`;
+  
+  return {
+    url: skill.rawFileUrl,
+    filename,
+  };
+}

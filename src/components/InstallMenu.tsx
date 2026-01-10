@@ -307,24 +307,24 @@ function LocalIcon() {
 
 function ChevronIcon() {
   return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M3 4l2 2 2-2" />
+    <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 4.5l3 3 3-3" />
     </svg>
   );
 }
 
 function ChevronRightIcon() {
   return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M4 3l2 2-2 2" />
+    <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4.5 3l3 3-3 3" />
     </svg>
   );
 }
 
 function ChevronLeftIcon() {
   return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M6 3L4 5l2 2" />
+    <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7.5 3l-3 3 3 3" />
     </svg>
   );
 }

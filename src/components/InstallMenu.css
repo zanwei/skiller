@@ -8,6 +8,15 @@
   gap: 4px;
 }
 
+.install-menu-trigger svg {
+  opacity: 0.7;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.install-menu-trigger:hover svg {
+  opacity: 1;
+}
+
 .install-menu-dropdown {
   min-width: 180px;
   background: hsl(var(--sidebar-background));
@@ -81,6 +90,15 @@
   height: 14px;
 }
 
+.install-menu-back svg:first-child {
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.install-menu-back:hover svg:first-child {
+  opacity: 1;
+}
+
 .install-menu-item {
   display: flex;
   align-items: center;
@@ -110,7 +128,12 @@
 
 .install-menu-item svg:last-child {
   margin-left: auto;
-  opacity: 0.5;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.install-menu-item:hover svg:last-child {
+  opacity: 0.9;
 }
 
 .install-menu-item-default {

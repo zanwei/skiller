@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Skill, InstalledItem, Client, SkillType, PackageManager, CLIENT_LABELS, CLIENT_LOCAL_SKILL_PATHS, CLIENT_PERSONAL_SKILL_PATHS } from '../types';
-import { fetchSkillContent, getSkillInstallCommand } from '../api/registry';
+import { fetchSkillContent, getSkillInstallCommand, getSkillDownloadInfo } from '../api/registry';
 import { InstallMenu } from './InstallMenu';
 import { ConfirmDialog } from './ConfirmDialog';
 import { executeInTerminal } from '../utils/terminal';
 import { useSettings } from '../hooks/useSettings';
+import { useToast } from '../contexts/ToastContext';
 import './SkillDetail.css';
 
 interface SkillDetailProps {
@@ -21,12 +22,14 @@ interface InstallConfig {
 
 export function SkillDetail({ skill, onInstalled }: SkillDetailProps) {
   const { settings } = useSettings();
+  const { showToast } = useToast();
   const [content, setContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [installConfig, setInstallConfig] = useState<InstallConfig | null>(null);
   const [installing, setInstalling] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     async function loadContent() {
@@ -103,6 +106,38 @@ export function SkillDetail({ skill, onInstalled }: SkillDetailProps) {
     });
   };
 
+  const handleDownload = async () => {
+    const downloadInfo = getSkillDownloadInfo(skill);
+    if (!downloadInfo) {
+      console.error('No download URL available for this skill');
+      return;
+    }
+    
+    setDownloading(true);
+    try {
+      if (window.__TAURI__) {
+        const { invoke } = await import('@tauri-apps/api/core');
+        const filePath = await invoke<string>('download_skill', {
+          url: downloadInfo.url,
+          filename: downloadInfo.filename,
+          downloadPath: settings.defaultDownloadPath || null,
+        });
+        showToast({
+          message: `Downloaded "${skill.name}" successfully`,
+          filePath,
+          fileName: downloadInfo.filename,
+        });
+      } else {
+        // Web fallback: open download URL in new tab
+        window.open(downloadInfo.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="skill-detail">
       <div className="skill-detail-content">
@@ -134,18 +169,34 @@ export function SkillDetail({ skill, onInstalled }: SkillDetailProps) {
             </div>
           )}
           <div className="skill-detail-actions">
+            <div className="skill-detail-actions-left">
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={handleLocalInstall}
+              >
+                Install
+              </button>
+              <InstallMenu
+                skill={skill}
+                onInstall={handleInstallToClient}
+                disabled={false}
+                defaultPackageManager={settings.defaultPackageManager}
+              />
+            </div>
             <button
-              className="btn btn-primary btn-sm"
-              onClick={handleLocalInstall}
+              className={`btn btn-secondary btn-sm skill-download-btn ${downloading ? 'loading' : ''}`}
+              onClick={handleDownload}
+              disabled={downloading}
+              title="Download skill"
             >
-              Install
+              <span className="skill-download-btn-content">
+                <SkillDownloadIcon />
+                <span>Download skill</span>
+              </span>
+              <span className="skill-download-btn-spinner">
+                <span className="spinner spinner-xs" />
+              </span>
             </button>
-            <InstallMenu
-              skill={skill}
-              onInstall={handleInstallToClient}
-              disabled={false}
-              defaultPackageManager={settings.defaultPackageManager}
-            />
           </div>
         </div>
 
@@ -449,6 +500,16 @@ function CheckIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+function SkillDownloadIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
     </svg>
   );
 }

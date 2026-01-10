@@ -1,6 +1,6 @@
 [package]
 name = "skiller"
-version = "1.0.2"
+version = "1.0.3"
 description = "A desktop menubar app for Claude Code plugins and Agent Skills"
 authors = ["Skiller"]
 edition = "2021"
@@ -21,6 +21,8 @@ tauri-plugin-http = "2"
 tauri-plugin-global-shortcut = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+dirs = "5"
+reqwest = { version = "0.12", features = ["blocking"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-single-instance = "2"

@@ -4,8 +4,9 @@ import { Card } from './Card';
 import { ConfirmDialog } from './ConfirmDialog';
 import { InstallMenu } from './InstallMenu';
 import { executeInTerminal } from '../utils/terminal';
-import { getSkillInstallCommand } from '../api/registry';
+import { getSkillInstallCommand, getSkillDownloadInfo } from '../api/registry';
 import { useSettings } from '../hooks/useSettings';
+import { useToast } from '../contexts/ToastContext';
 
 interface SkillListProps {
   skills: Skill[];
@@ -42,8 +43,10 @@ export function SkillList({
   onSkillClick
 }: SkillListProps) {
   const { settings } = useSettings();
+  const { showToast } = useToast();
   const [installConfig, setInstallConfig] = useState<InstallConfig | null>(null);
   const [installing, setInstalling] = useState(false);
+  const [downloading, setDownloading] = useState<string | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const lastItemRef = useCallback((node: HTMLDivElement | null) => {
@@ -109,6 +112,38 @@ export function SkillList({
       skillType: 'project',
       packageManager: settings.defaultPackageManager,
     });
+  };
+
+  const handleDownload = async (skill: Skill) => {
+    const downloadInfo = getSkillDownloadInfo(skill);
+    if (!downloadInfo) {
+      console.error('No download URL available for this skill');
+      return;
+    }
+    
+    setDownloading(skill.id);
+    try {
+      if (window.__TAURI__) {
+        const { invoke } = await import('@tauri-apps/api/core');
+        const filePath = await invoke<string>('download_skill', {
+          url: downloadInfo.url,
+          filename: downloadInfo.filename,
+          downloadPath: settings.defaultDownloadPath || null,
+        });
+        showToast({
+          message: `Downloaded "${skill.name}" successfully`,
+          filePath,
+          fileName: downloadInfo.filename,
+        });
+      } else {
+        // Web fallback: open download URL in new tab
+        window.open(downloadInfo.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setDownloading(null);
+    }
   };
 
   if (loading && skills.length === 0) {
@@ -182,18 +217,34 @@ export function SkillList({
             isInstalled={false}
             actions={
               <div className="skill-actions" onClick={(e) => e.stopPropagation()}>
+                <div className="skill-actions-left">
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => handleLocalInstall(skill)}
+                  >
+                    Install
+                  </button>
+                  <InstallMenu
+                    skill={skill}
+                    onInstall={handleInstallToClient}
+                    disabled={false}
+                    defaultPackageManager={settings.defaultPackageManager}
+                  />
+                </div>
                 <button
-                  className="btn btn-primary btn-sm"
-                  onClick={() => handleLocalInstall(skill)}
+                  className={`btn btn-secondary btn-sm skill-download-btn ${downloading === skill.id ? 'loading' : ''}`}
+                  onClick={() => handleDownload(skill)}
+                  disabled={downloading === skill.id}
+                  title="Download skill"
                 >
-                  Install
+                  <span className="skill-download-btn-content">
+                    <DownloadIcon />
+                    <span>Download skill</span>
+                  </span>
+                  <span className="skill-download-btn-spinner">
+                    <span className="spinner spinner-xs" />
+                  </span>
                 </button>
-                <InstallMenu
-                  skill={skill}
-                  onInstall={handleInstallToClient}
-                  disabled={false}
-                  defaultPackageManager={settings.defaultPackageManager}
-                />
               </div>
             }
           />
@@ -259,5 +310,15 @@ export function SkillList({
         />
       )}
     </>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
   );
 }

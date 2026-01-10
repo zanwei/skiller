@@ -110,6 +110,56 @@
 .skill-actions {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
   width: 100%;
+}
+
+.skill-actions-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-download-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 115px;
+}
+
+.skill-download-btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  visibility: visible;
+}
+
+.skill-download-btn-content svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.skill-download-btn-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+}
+
+.skill-download-btn.loading .skill-download-btn-content {
+  visibility: hidden;
+}
+
+.skill-download-btn.loading .skill-download-btn-spinner {
+  visibility: visible;
 }

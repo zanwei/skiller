@@ -6,6 +6,7 @@ import {
   clearSkillsCache,
   SKILL_PAGE_SIZE 
 } from '../api/registry';
+import { SortOption } from '../components/SortDropdown';
 
 const SEARCH_DEBOUNCE_MS = 500;
 
@@ -16,6 +17,7 @@ export function useSkills() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [tagFilter, setTagFilter] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>('relevance');
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   
@@ -101,12 +103,21 @@ export function useSkills() {
     await loadSkills(true);
   }, [searchQuery]);
 
-  const filteredSkills = useMemo(() => 
-    tagFilter
+  const filteredAndSortedSkills = useMemo(() => {
+    let result = tagFilter
       ? skills.filter(skill => skill.tags.includes(tagFilter))
-      : skills,
-    [skills, tagFilter]
-  );
+      : [...skills];
+    
+    // Apply sorting
+    if (sortBy === 'downloads') {
+      result.sort((a, b) => b.downloads - a.downloads);
+    } else if (sortBy === 'stars') {
+      result.sort((a, b) => b.stars - a.stars);
+    }
+    // 'relevance' keeps the original order from API
+    
+    return result;
+  }, [skills, tagFilter, sortBy]);
 
   const allTags = useMemo(() => 
     [...new Set(skills.flatMap(s => s.tags))].sort(),
@@ -114,7 +125,7 @@ export function useSkills() {
   );
 
   return {
-    skills: filteredSkills,
+    skills: filteredAndSortedSkills,
     allSkills: skills,
     loading,
     loadingMore,
@@ -128,5 +139,7 @@ export function useSkills() {
     tagFilter,
     setTagFilter,
     allTags,
+    sortBy,
+    setSortBy,
   };
 }

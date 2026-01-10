@@ -1,6 +1,6 @@
 {
   "name": "skiller",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A lightweight desktop menubar app for browsing and installing Claude Code plugins and Agent Skills",
   "type": "module",
   "private": true,

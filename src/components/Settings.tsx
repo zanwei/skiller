@@ -35,7 +35,7 @@ export function Settings({ settings, onUpdate, onBack }: SettingsProps) {
     getVersion().then(setAppVersion).catch(() => setAppVersion('1.0.0'));
   }, []);
 
-  const handlePathSelect = async () => {
+  const handleDownloadPathSelect = async () => {
     try {
       if (window.__TAURI__) {
         const { invoke } = await import('@tauri-apps/api/core');
@@ -47,22 +47,22 @@ export function Settings({ settings, onUpdate, onBack }: SettingsProps) {
           const selected = await open({
             directory: true,
             multiple: false,
-            title: 'Select Default Install Path',
+            title: 'Select Default Download Path',
           });
           if (selected && typeof selected === 'string') {
-            onUpdate({ defaultInstallPath: selected });
+            onUpdate({ defaultDownloadPath: selected });
           }
         } finally {
           await invoke('set_prevent_hide', { prevent: false });
         }
       } else {
-        const path = prompt('Enter default install path:', settings.defaultInstallPath);
+        const path = prompt('Enter default download path:', settings.defaultDownloadPath);
         if (path !== null) {
-          onUpdate({ defaultInstallPath: path });
+          onUpdate({ defaultDownloadPath: path });
         }
       }
     } catch (error) {
-      console.error('Failed to select path:', error);
+      console.error('Failed to select download path:', error);
     }
   };
 
@@ -319,23 +319,23 @@ export function Settings({ settings, onUpdate, onBack }: SettingsProps) {
         </div>
 
         <div className="settings-section">
-          <h3 className="settings-section-title">Installation</h3>
+          <h3 className="settings-section-title">Download & Installation</h3>
           
           <div className="settings-item">
-            <label className="settings-label">Default Install Path</label>
+            <label className="settings-label">Default Download Path</label>
             <p className="settings-description">
-              Used for local skill installations
+              Where to save downloaded skill files (default: system Downloads folder)
             </p>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'stretch' }}>
               <input
                 type="text"
                 className="settings-input"
                 style={{ flex: 1 }}
-                value={settings.defaultInstallPath}
-                onChange={e => onUpdate({ defaultInstallPath: e.target.value })}
-                placeholder="Not set (will ask each time)"
+                value={settings.defaultDownloadPath}
+                onChange={e => onUpdate({ defaultDownloadPath: e.target.value })}
+                placeholder="System Downloads folder"
               />
-              <button className="btn btn-secondary btn-sm" onClick={handlePathSelect}>
+              <button className="btn btn-secondary btn-sm" style={{ height: 'auto' }} onClick={handleDownloadPathSelect}>
                 Browse
               </button>
             </div>
@@ -364,7 +364,7 @@ export function Settings({ settings, onUpdate, onBack }: SettingsProps) {
             <p className="settings-description">
               Terminal app used for running commands
             </p>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'stretch' }}>
               <select
                 className="settings-select"
                 style={{ flex: 1 }}
@@ -381,6 +381,7 @@ export function Settings({ settings, onUpdate, onBack }: SettingsProps) {
               </select>
               <button 
                 className="btn btn-secondary btn-sm" 
+                style={{ height: 'auto' }}
                 onClick={loadTerminals}
                 disabled={loadingTerminals}
               >

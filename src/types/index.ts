@@ -93,6 +93,7 @@ export interface TerminalApp {
 export interface AppSettings {
   panelHeight: number;
   defaultInstallPath: string;
+  defaultDownloadPath: string;
   defaultPackageManager: PackageManager;
   defaultTerminal: string;
   theme: Theme;
@@ -103,6 +104,7 @@ export interface AppSettings {
 export const DEFAULT_SETTINGS: AppSettings = {
   panelHeight: 650,
   defaultInstallPath: '',
+  defaultDownloadPath: '',
   defaultPackageManager: 'npm',
   defaultTerminal: '',
   theme: 'dark',

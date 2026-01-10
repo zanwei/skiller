@@ -1,5 +1,7 @@
 use std::process::Command;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::fs;
+use std::io::Write;
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -380,4 +382,61 @@ pub async fn open_in_explorer(path: String) -> Result<(), String> {
     }
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn get_default_download_path() -> Result<String, String> {
+    let download_dir = dirs::download_dir()
+        .ok_or_else(|| "Could not find download directory".to_string())?;
+    
+    download_dir
+        .to_str()
+        .map(|s| s.to_string())
+        .ok_or_else(|| "Invalid download path".to_string())
+}
+
+#[tauri::command]
+pub async fn download_skill(url: String, filename: String, download_path: Option<String>) -> Result<String, String> {
+    // Get the target directory
+    let target_dir: PathBuf = if let Some(path) = download_path {
+        if path.is_empty() {
+            dirs::download_dir()
+                .ok_or_else(|| "Could not find download directory".to_string())?
+        } else {
+            PathBuf::from(path)
+        }
+    } else {
+        dirs::download_dir()
+            .ok_or_else(|| "Could not find download directory".to_string())?
+    };
+    
+    // Ensure directory exists
+    fs::create_dir_all(&target_dir)
+        .map_err(|e| format!("Failed to create directory: {}", e))?;
+    
+    // Build the full file path
+    let file_path = target_dir.join(&filename);
+    
+    // Download the file using reqwest (blocking)
+    let response = reqwest::blocking::get(&url)
+        .map_err(|e| format!("Failed to download: {}", e))?;
+    
+    if !response.status().is_success() {
+        return Err(format!("Download failed with status: {}", response.status()));
+    }
+    
+    let bytes = response.bytes()
+        .map_err(|e| format!("Failed to read response: {}", e))?;
+    
+    // Write to file
+    let mut file = fs::File::create(&file_path)
+        .map_err(|e| format!("Failed to create file: {}", e))?;
+    
+    file.write_all(&bytes)
+        .map_err(|e| format!("Failed to write file: {}", e))?;
+    
+    file_path
+        .to_str()
+        .map(|s| s.to_string())
+        .ok_or_else(|| "Invalid file path".to_string())
 }
