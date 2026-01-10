@@ -1,8 +1,8 @@
 # Skiller
 
-<div align="center">
+https://github.com/user-attachments/assets/217d95e4-3cf3-4934-bee1-fb90efdee98f
 
-![Skiller Logo](public/logo.png)
+<div align="center">
 
 **A lightweight desktop menubar app for browsing and installing Claude Code plugins and Agent Skills**
 
