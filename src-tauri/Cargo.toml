@@ -1,6 +1,6 @@
 [package]
 name = "skiller"
-version = "1.0.3"
+version = "1.0.4"
 description = "A desktop menubar app for Claude Code plugins and Agent Skills"
 authors = ["Skiller"]
 edition = "2021"
