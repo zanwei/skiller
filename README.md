@@ -1,6 +1,6 @@
-# Skiller
+# Introducing Skiller
 
-https://github.com/user-attachments/assets/217d95e4-3cf3-4934-bee1-fb90efdee98f
+![preview](https://github.com/user-attachments/assets/394f6263-0c80-48e1-9c3e-ac40f5402725)
 
 <div align="center">
 
@@ -10,6 +10,8 @@ https://github.com/user-attachments/assets/217d95e4-3cf3-4934-bee1-fb90efdee98f
 [![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
+https://github.com/user-attachments/assets/1f69740f-5fff-4994-9f07-2d86f71ac831
 
 </div>
 
