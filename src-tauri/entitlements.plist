@@ -9,5 +9,13 @@
     <!-- Inherit entitlements (needed for child processes like osascript) -->
     <key>com.apple.security.inherit</key>
     <true/>
+    
+    <!-- Allow unsigned executable memory (required for Tauri/WebView) -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+    
+    <!-- Allow JIT for JavaScript execution -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
 </dict>
 </plist>

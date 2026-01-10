@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-01-XX
+
+### Security
+- **Code Signing**: macOS app is now signed with Developer ID Application certificate
+- Users can now install and run the app without security warnings (after first right-click "Open")
+- DMG installer is also signed for secure distribution
+
+### Changed
+- Updated entitlements.plist to support Hardened Runtime
+- Configured code signing in Tauri build process
+
+## [1.0.0] - 2025-01-XX
+
 ### Added
 - Initial release
 
@@ -36,5 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Content Security Policy (CSP) configured
 - Sandboxed Tauri commands
 
-[Unreleased]: https://github.com/skiller-dev/skiller/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/skiller-dev/skiller/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/skiller-dev/skiller/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/skiller-dev/skiller/releases/tag/v1.0.0
 [0.1.0]: https://github.com/skiller-dev/skiller/releases/tag/v0.1.0
