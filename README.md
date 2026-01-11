@@ -1,8 +1,9 @@
+<div align="center">
+  
 # Introducing Skiller
 
 ![preview](https://github.com/user-attachments/assets/394f6263-0c80-48e1-9c3e-ac40f5402725)
 
-<div align="center">
 
 **A lightweight desktop menubar app for browsing and installing Claude Code plugins and Agent Skills**
 
