@@ -85,30 +85,11 @@ jobs:
             echo "No certificate provided, using ad-hoc signing"
           fi
 
-      # Build with notarization (when Apple API credentials are configured)
-      - name: Build Tauri app (with notarization)
-        if: matrix.platform == 'macos-latest' && secrets.APPLE_API_ISSUER != ''
+      - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY || '-' }}
-          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-          APPLE_API_KEY_PATH: ${{ secrets.APPLE_API_KEY_PATH }}
-        with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Skiller ${{ github.ref_name }}'
-          releaseBody: 'See the assets to download and install this version.'
-          releaseDraft: true
-          prerelease: false
-          args: --target ${{ matrix.target }}
-
-      # Build without notarization (ad-hoc signing only)
-      - name: Build Tauri app (without notarization)
-        if: matrix.platform != 'macos-latest' || secrets.APPLE_API_ISSUER == ''
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # macOS signing: use ad-hoc signing (-) if no certificate configured
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY || '-' }}
         with:
           tagName: ${{ github.ref_name }}
