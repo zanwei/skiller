@@ -38,6 +38,12 @@ Thumbs.db
 .env.production.local
 *.local
 
+# Apple code signing secrets (NEVER commit these!)
+*.p8
+*.p12
+AuthKey_*.p8
+certificate.p12
+
 # Logs
 logs/
 *.log
