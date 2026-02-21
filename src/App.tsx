@@ -15,9 +15,7 @@ function AppContent() {
     try {
       if (window.__TAURI__) {
         const { invoke } = await import('@tauri-apps/api/core');
-        // Get the directory containing the file
-        const dirPath = filePath.substring(0, filePath.lastIndexOf('/'));
-        await invoke('open_in_explorer', { path: dirPath });
+        await invoke('reveal_in_explorer', { path: filePath });
       }
     } catch (error) {
       console.error('Failed to reveal in finder:', error);

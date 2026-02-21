@@ -73,15 +73,7 @@
 }
 
 .panel-content.no-scroll {
-  overflow-y: scroll;
-}
-
-.panel-content.no-scroll::-webkit-scrollbar-thumb {
-  background-color: transparent !important;
-}
-
-.panel-content.no-scroll::-webkit-scrollbar-track {
-  background-color: transparent !important;
+  overflow-y: hidden;
 }
 
 /* Loading state */

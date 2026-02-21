@@ -32,7 +32,7 @@ export function Settings({ settings, onUpdate, onBack }: SettingsProps) {
   const shortcutInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    getVersion().then(setAppVersion).catch(() => setAppVersion('1.0.0'));
+    getVersion().then(setAppVersion).catch(() => setAppVersion('1.0.5'));
   }, []);
 
   const handleDownloadPathSelect = async () => {

@@ -37,6 +37,11 @@ export type Client =
   | 'opencode'
   | 'goose'
   | 'letta'
+  | 'antigravity'
+  | 'windsurf'
+  | 'trae'
+  | 'codebuddy'
+  | 'qoder'
   | 'github';
 
 export const CLIENT_LABELS: Record<Client, string> = {
@@ -49,6 +54,11 @@ export const CLIENT_LABELS: Record<Client, string> = {
   'opencode': 'OpenCode',
   'goose': 'Goose',
   'letta': 'Letta',
+  'antigravity': 'Antigravity',
+  'windsurf': 'Windsurf',
+  'trae': 'Trae',
+  'codebuddy': 'CodeBuddy',
+  'qoder': 'Qoder',
   'github': 'GitHub',
 };
 
@@ -62,6 +72,11 @@ export const CLIENT_LOCAL_SKILL_PATHS: Record<Client, string> = {
   'opencode': '.opencode/skills/',
   'goose': '.goose/skills/',
   'letta': '.letta/skills/',
+  'antigravity': '.antigravity/skills/',
+  'windsurf': '.windsurf/skills/',
+  'trae': '.trae/skills/',
+  'codebuddy': '.codebuddy/skills/',
+  'qoder': '.qoder/skills/',
   'github': '.github/skills/',
 };
 
@@ -75,6 +90,11 @@ export const CLIENT_PERSONAL_SKILL_PATHS: Record<Client, string> = {
   'opencode': '~/.opencode/skills/',
   'goose': '~/.goose/skills/',
   'letta': '~/.letta/skills/',
+  'antigravity': '~/.antigravity/skills/',
+  'windsurf': '~/.windsurf/skills/',
+  'trae': '~/.trae/skills/',
+  'codebuddy': '~/.codebuddy/skills/',
+  'qoder': '~/.qoder/skills/',
   'github': '~/.github/skills/',
 };
 

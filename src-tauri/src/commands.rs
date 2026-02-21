@@ -1,8 +1,10 @@
 use std::process::Command;
 use std::path::{Path, PathBuf};
 use std::fs;
-use std::io::Write;
+use std::io::{Write, Cursor};
 use serde::Serialize;
+use zip::ZipWriter;
+use zip::write::SimpleFileOptions;
 
 #[derive(Serialize)]
 pub struct TerminalApp {
@@ -385,6 +387,54 @@ pub async fn open_in_explorer(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+pub async fn reveal_in_explorer(path: String) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        let target = Path::new(&path);
+        let mut command = Command::new("open");
+        if target.is_dir() {
+            command.arg(&path);
+        } else {
+            command.args(["-R", &path]);
+        }
+        command
+            .spawn()
+            .map_err(|e| format!("Failed to reveal path in Finder: {}", e))?;
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let target = Path::new(&path);
+        let mut command = Command::new("explorer");
+        if target.is_dir() {
+            command.arg(&path);
+        } else {
+            command.args(["/select,", &path]);
+        }
+        command
+            .spawn()
+            .map_err(|e| format!("Failed to reveal path in Explorer: {}", e))?;
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let target = Path::new(&path);
+        let open_target = if target.is_file() {
+            target.parent().unwrap_or(target)
+        } else {
+            target
+        };
+
+        Command::new("xdg-open")
+            .arg(open_target)
+            .spawn()
+            .map_err(|e| format!("Failed to reveal path in file manager: {}", e))?;
+    }
+
+    Ok(())
+}
+
+#[tauri::command]
 pub async fn get_default_download_path() -> Result<String, String> {
     let download_dir = dirs::download_dir()
         .ok_or_else(|| "Could not find download directory".to_string())?;
@@ -414,10 +464,7 @@ pub async fn download_skill(url: String, filename: String, download_path: Option
     fs::create_dir_all(&target_dir)
         .map_err(|e| format!("Failed to create directory: {}", e))?;
     
-    // Build the full file path
-    let file_path = target_dir.join(&filename);
-    
-    // Download the file using reqwest (blocking)
+    // Download the markdown content using reqwest (blocking)
     let response = reqwest::blocking::get(&url)
         .map_err(|e| format!("Failed to download: {}", e))?;
     
@@ -425,14 +472,39 @@ pub async fn download_skill(url: String, filename: String, download_path: Option
         return Err(format!("Download failed with status: {}", response.status()));
     }
     
-    let bytes = response.bytes()
+    let md_content = response.bytes()
         .map_err(|e| format!("Failed to read response: {}", e))?;
     
-    // Write to file
+    // Create zip file in memory
+    let mut zip_buffer = Cursor::new(Vec::new());
+    {
+        let mut zip = ZipWriter::new(&mut zip_buffer);
+        let options = SimpleFileOptions::default()
+            .compression_method(zip::CompressionMethod::Deflated);
+        
+        // Get the md filename from the zip filename (replace .zip with .md)
+        let md_filename = if filename.ends_with(".zip") {
+            filename[..filename.len() - 4].to_string() + ".md"
+        } else {
+            filename.clone() + ".md"
+        };
+        
+        zip.start_file(&md_filename, options)
+            .map_err(|e| format!("Failed to create file in zip: {}", e))?;
+        zip.write_all(&md_content)
+            .map_err(|e| format!("Failed to write to zip: {}", e))?;
+        zip.finish()
+            .map_err(|e| format!("Failed to finalize zip: {}", e))?;
+    }
+    
+    // Build the full file path for the zip
+    let file_path = target_dir.join(&filename);
+    
+    // Write zip to file
     let mut file = fs::File::create(&file_path)
         .map_err(|e| format!("Failed to create file: {}", e))?;
     
-    file.write_all(&bytes)
+    file.write_all(zip_buffer.get_ref())
         .map_err(|e| format!("Failed to write file: {}", e))?;
     
     file_path

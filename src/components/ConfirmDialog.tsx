@@ -71,19 +71,19 @@ export function ConfirmDialog({
           )}
           <div className="dialog-actions-right">
             <button 
-              className="btn btn-secondary" 
+              className="btn btn-secondary dialog-cancel-btn" 
               onClick={onCancel}
               disabled={loading}
             >
               {cancelText}
             </button>
             <button 
-              className="btn btn-primary" 
+              className="btn btn-primary dialog-confirm-btn" 
               onClick={onConfirm}
               disabled={loading}
+              aria-label={loading ? `${confirmText} in progress` : confirmText}
             >
-              {loading && <span className="btn-spinner" />}
-              {confirmText}
+              {loading ? <span className="btn-spinner" /> : confirmText}
             </button>
           </div>
         </div>

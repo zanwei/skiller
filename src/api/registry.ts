@@ -82,7 +82,7 @@ function parseSkill(data: any): Skill {
     stars: data.stars || 0,
     tags: data.keywords || data.tags || [],
     installIdentifier: namespace || `@${owner}/${repo}/${data.name}`,
-    supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'github'],
+    supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'antigravity', 'windsurf', 'trae', 'codebuddy', 'qoder', 'github'],
     rawFileUrl: data.metadata?.rawFileUrl || undefined,
   };
 }
@@ -363,7 +363,7 @@ function getMockSkills(): Skill[] {
       stars: 52420,
       tags: [],
       installIdentifier: '@anthropics/claude-code/frontend-design',
-      supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'github'],
+      supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'antigravity', 'windsurf', 'trae', 'codebuddy', 'qoder', 'github'],
       rawFileUrl: 'https://raw.githubusercontent.com/anthropics/claude-code/main/plugins/frontend-design/skills/frontend-design/SKILL.md',
     },
     {
@@ -376,7 +376,7 @@ function getMockSkills(): Skill[] {
       stars: 20969,
       tags: [],
       installIdentifier: '@wshobson/agents/prompt-engineering-patterns',
-      supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'github'],
+      supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'antigravity', 'windsurf', 'trae', 'codebuddy', 'qoder', 'github'],
       rawFileUrl: 'https://raw.githubusercontent.com/wshobson/agents/main/skills/prompt-engineering-patterns/SKILL.md',
     },
     {
@@ -389,7 +389,7 @@ function getMockSkills(): Skill[] {
       stars: 14889,
       tags: [],
       installIdentifier: '@obra/superpowers/brainstorming',
-      supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'github'],
+      supportedClients: ['claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'antigravity', 'windsurf', 'trae', 'codebuddy', 'qoder', 'github'],
       rawFileUrl: 'https://raw.githubusercontent.com/obra/superpowers/main/skills/brainstorming/SKILL.md',
     },
   ];
@@ -430,8 +430,8 @@ export function getSkillDownloadInfo(skill: Skill): { url: string; filename: str
   }
   
   // rawFileUrl format: https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}/SKILL.md
-  // We can directly use this URL to download the SKILL.md file
-  const filename = `${skill.name}.md`;
+  // We download the SKILL.md and compress it to a zip file
+  const filename = `${skill.name}.zip`;
   
   return {
     url: skill.rawFileUrl,
