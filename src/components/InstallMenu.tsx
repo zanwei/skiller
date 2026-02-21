@@ -11,6 +11,11 @@ import AmpCodeLogo from '../assets/icons/logo/amp-code.svg';
 import OpenCodeLogo from '../assets/icons/logo/open-code.svg';
 import GooseLogo from '../assets/icons/logo/goose.svg';
 import LettaLogo from '../assets/icons/logo/letta.svg';
+import AntigravityLogo from '../assets/icons/logo/antigravity.svg';
+import WindsurfLogo from '../assets/icons/logo/windsurf.svg';
+import TraeLogo from '../assets/icons/logo/trae.svg';
+import CodeBuddyLogo from '../assets/icons/logo/codebuddy.svg';
+import QoderLogo from '../assets/icons/logo/qoder.svg';
 
 interface InstallMenuProps {
   skill: Skill;
@@ -19,12 +24,13 @@ interface InstallMenuProps {
   defaultPackageManager: PackageManager;
 }
 
-const CLIENTS: Client[] = ['claude', 'claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'github'];
+const CLIENTS: Client[] = ['claude', 'claude-code', 'cursor', 'vscode', 'codex', 'amp', 'opencode', 'goose', 'letta', 'antigravity', 'windsurf', 'trae', 'codebuddy', 'qoder', 'github'];
 const SKILL_TYPES: { value: SkillType; label: string }[] = [
   { value: 'personal', label: 'As Personal Skill' },
   { value: 'project', label: 'As Project Skill' },
 ];
 const PACKAGE_MANAGERS: PackageManager[] = ['npm', 'bun', 'pnpm', 'yarn'];
+const MENU_MAX_HEIGHT = 400;
 
 interface MenuPosition {
   top: number;
@@ -45,12 +51,12 @@ export function InstallMenu({ skill, onInstall, disabled, defaultPackageManager 
     
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const menuWidth = 180;
-    const menuHeight = 400;
     const gap = 8;
     const padding = 12;
     
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
+    const menuHeight = Math.min(MENU_MAX_HEIGHT, viewportHeight - padding * 2);
     
     let left: number;
     let top: number;
@@ -111,22 +117,14 @@ export function InstallMenu({ skill, onInstall, disabled, defaultPackageManager 
     const scrollableParent = document.querySelector('.panel-content');
     if (!scrollableParent) return;
 
-    const preventScroll = (e: Event) => {
-      e.preventDefault();
-    };
-
     if (open) {
       scrollableParent.classList.add('no-scroll');
-      scrollableParent.addEventListener('wheel', preventScroll, { passive: false });
-      scrollableParent.addEventListener('touchmove', preventScroll, { passive: false });
     } else {
       scrollableParent.classList.remove('no-scroll');
     }
 
     return () => {
       scrollableParent.classList.remove('no-scroll');
-      scrollableParent.removeEventListener('wheel', preventScroll);
-      scrollableParent.removeEventListener('touchmove', preventScroll);
     };
   }, [open]);
 
@@ -246,6 +244,11 @@ const CLIENT_LOGOS: Record<Client, string | null> = {
   'opencode': OpenCodeLogo,
   'goose': GooseLogo,
   'letta': LettaLogo,
+  'antigravity': AntigravityLogo,
+  'windsurf': WindsurfLogo,
+  'trae': TraeLogo,
+  'codebuddy': CodeBuddyLogo,
+  'qoder': QoderLogo,
   'github': null,
 };
 

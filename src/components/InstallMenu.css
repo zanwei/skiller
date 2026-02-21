@@ -25,7 +25,11 @@
   box-shadow: 0 4px 12px hsl(0 0% 0% / 0.3);
   z-index: 1000;
   animation: menuFadeIn 0.15s ease;
-  overflow: hidden;
+  max-height: min(400px, calc(100vh - 24px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Dark mode: lighter background for menu */

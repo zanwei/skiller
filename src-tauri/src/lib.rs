@@ -274,6 +274,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::execute_in_terminal,
             commands::open_in_explorer,
+            commands::reveal_in_explorer,
             commands::get_installed_terminals,
             commands::get_default_download_path,
             commands::download_skill,
